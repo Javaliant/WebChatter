@@ -1,0 +1,43 @@
+/* Colors:
+	background: #E9EAED;
+	font-black: #141823;
+	link-bold-blue: #4A66A0;
+	font-blue: #A0A5AF;
+	contrast: #415E9A;
+	white: #ffffff;
+*/
+
+body {
+	background-color: #E9EAED;
+	color: #141823;
+}
+
+#title {
+	color: #415E9A;
+	text-align: center;
+}
+
+#login-form {
+	margin-top: 10em;
+	text-align: center;
+}
+
+#login {
+	margin: 0.5em;
+	margin-left: 4em;
+	border-radius: 0.6em;
+	color: #ffffff;
+	cursor: pointer;
+	font-size: 1em;
+	background-color: #415E9A;
+}
+
+#login:hover {
+	box-shadow:  0 0 10px #4A66A0;
+}
+
+#login:active {
+	position: relative;
+	outline: none;
+	top: 0.05em;
+}
