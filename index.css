@@ -41,3 +41,15 @@ body {
 	outline: none;
 	top: 0.05em;
 }
+
+.response {
+	font-weight: bold;
+	text-align: center;
+}
+.success {
+	color: #4A66A0;	
+}
+
+.error {
+	color: #FFCCCC;
+}

@@ -1,14 +1,12 @@
 <?php
-DEFINE ('DB_USER', 'kerules');
-DEFINE ('DB_PASSWORD', 'kero60');
-DEFINE ('DB_HOST', 'localhost');
-DEFINE ('DB_NAME', 'cps3351');
+DEFINE('DB_USER', 'root');
+DEFINE('DB_PASSWORD', 'q2s5ccec9');
+DEFINE('DB_HOST', 'localhost');
+DEFINE('DB_NAME', 'Chatter');
 
 // Make the connection:
-$dbc = @mysqli_connect (DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) OR die ('Could not connect to MySQL: ' . mysqli_connect_error() );
+$dbc = @mysqli_connect(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME) OR die('Could not connect to MySQL: ' . mysqli_connect_error());
 
 // Set the encoding...
 mysqli_set_charset($dbc, 'utf8');
-
-
 ?>

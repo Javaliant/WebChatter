@@ -18,15 +18,31 @@
 			<h1 id='title'>Welcome to Chatter</h1>
 		</header>
 
-		<form id='login-form' action="login.php" method="post">
+		<form id='login-form' action="index.php" method="post">
 			Username: <input type="text" class="input" name="username" required="required"><br>
 			Password: <input type="password" class="input" name="password" style="margin-left: 3px;" required="required"><br>
-			<input id="login" type="submit" value="Log in">
+			<input id="login" type="submit" name="submit" value="Log in">
 		</form>
+
+		<?php
+			//include("connection.php"); 
+			$name = $_POST['username'];
+			$password = sha1($_POST['password']);
+			if(isset($_POST['submit'])) {
+				echo "<span class='response success'>Your username is $name.</span>";
+			}
+
+			/*$SQL = "SELECT username, password FROM users WHERE username=$name AND password=$password;";
+
+			if (mysqli_query($dbc, $SQL)) {
+				echo "span class='success'>Success</span>";
+			} else {
+				echo "<span class='error'>Error</span>" . mysqli_error($dbc);
+			}*/
+		?>
 
 		<footer>
 
 		</footer>
 	</body>
-
 </html>
