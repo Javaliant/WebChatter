@@ -14,11 +14,8 @@
 	</head>
 
 	<body>
-		<header>
-			<h1 id='title'>Welcome to Chatter</h1>
-		</header>
-
 		<form id='login-form' action="index.php" method="post">
+			<h1 id='title'>Welcome to Chatter</h1>
 			Username: <input type="text" class="input" name="username" required="required"><br>
 			Password: <input type="password" class="input" name="password" style="margin-left: 3px;" required="required"><br>
 			<input id="login" type="submit" name="submit" value="Log in">
@@ -40,9 +37,5 @@
 				echo "<span class='error'>Error</span>" . mysqli_error($dbc);
 			}*/
 		?>
-
-		<footer>
-
-		</footer>
 	</body>
 </html>
