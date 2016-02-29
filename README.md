@@ -1,4 +1,5 @@
-##Web Chat Web Program
+#Web Chat Web Program
+##By: Luigi Vincent, Kerules Fareg, Xiaoding Lin
 
 Current goals are to:
  - Complete Base Page.
@@ -10,3 +11,4 @@ Current goals are to:
 ###Meeting Time
  - Mondays 4:00-6:00 PM.
  - Saturdays 11:00-3:00 PM.
+
