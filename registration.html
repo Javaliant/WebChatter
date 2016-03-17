@@ -1,0 +1,94 @@
+<!-- Author: Luigi Vincent -->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="keywords" content="registration, register, chat, chatroom"/>
+		<meta name="robots" content="index, follow"/>
+		<meta name="author" content="Luigi Vincent, Kerules Fareg, Xiaoding Lin"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Web Chatter</title>
+		<style>
+			body {
+				background-color: #E9EAED;
+				color: #141823;
+			}
+
+			#title {
+				color: #415E9A;
+				text-align: center;
+			}
+
+			#register-form {
+				margin-top: 10em;
+				text-align: center;
+			}
+
+			.login {
+				margin: 0.5em;
+				border-radius: 0.6em;
+				color: #ffffff;
+				cursor: pointer;
+				font-size: 1em;
+				background-color: #415E9A;
+			}
+			.login:hover {
+				box-shadow:  0 0 10px #4A66A0;
+			}
+			.login:active {
+				position: relative;
+				outline: none;
+				top: 0.05em;
+			}
+
+			#login {
+				margin-left: 6em;
+			}
+			.response {
+				font-weight: bold;
+				text-align: center;
+			}
+			.success {
+				color: #4A66A0; 
+			}
+
+			.error {
+				color: #FFCCCC;
+			}
+		</style>
+	</head>
+	<body>
+		<form id='register-form' method="post">
+			<h1 id='title'>Welcome to Chatter</h1>
+			ID: <input type="text" class="input" name="ID" id="ID" required="required" style="margin-left: 48px;"><br>
+			Username: <input type="text" class="input" name="username" id="username" required="required"><br>
+			Password: <input type="password" class="input" name="password" id="password" style="margin-left: 3px;" required="required"><br>
+			Re-enter Password: <input type="password" class="input" name="confirm-password" id="confirm-password" style="margin-right: 55px;" required="required"><br>
+			<input class="login" id="new" type="submit" name="register" value="Register" style="margin-left: 12em;">
+		</form>
+		<script src="/assets/sweetalert/dist/sweetalert.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="/assets/sweetalert/dist/sweetalert.css">
+		<script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+		<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+		<script>
+			var socket = io();
+
+			$('form').submit(function(e) {
+				e.preventDefault();
+				if ($('#password').val() === $('#confirm-password').val()) {
+					socket.emit('registration', $('#username').val(), $('#password').val());
+				} else {
+					swal("Oops...", "Passwords do not match", "error");
+				}
+			});
+
+			socket.on('redirect', function(page){
+				window.location.href = page;
+			});
+
+			socket.on('exists', function() {
+				swal("Sorry", "Username is taken", "error");
+			});
+		</script>
+	</body>
+</html>
