@@ -1,5 +1,4 @@
 #Client-Server Web Chat Application
-
 Built on Node.js, Express.js and socket.IO.
 
 Features:
