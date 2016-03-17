@@ -33,7 +33,9 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('chat message', function(msg) {
-		io.emit('chat message', user + ": " + msg);
+		if (msg.length > 0) {
+			io.emit('chat message', user + ": " + msg);
+		}
 	});
 
 	socket.on('login', function(username, password) {
