@@ -1,5 +1,5 @@
 {
-	"name": "socket-chat-example",
+	"name": "socket-chatting-app",
 	"version": "0.0.6",
 	"description": "web chatter",
 	"dependencies": {
