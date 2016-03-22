@@ -4,7 +4,16 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var serveStatic = require('serve-static');
-var onlineUsers = [];
+var connectingUser = [];
+
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+  host     : 'localhost',
+  user     : 'root',
+  password : 'q2s5ccec9',
+  database : 'Chatter'
+});
+connection.connect();
 
 app.use('/assets', serveStatic(__dirname + '/node_modules'));
 app.use(require('serve-favicon')(__dirname + '/assets/icon.ico'));
@@ -28,8 +37,10 @@ app.get('/app', function(req, res) {
 io.on('connection', function(socket) {
 	var user = '';
 	socket.on('user connect', function() {
-		socket.emit('chat message', 'Registered users: ' + getUserList());
-		user = onlineUsers.pop();
+		retrieveUserList(function(err, userList) {
+			socket.emit('chat message', userList);
+		});
+		user = connectingUser.pop();
 	});
 
 	socket.on('chat message', function(msg) {
@@ -39,13 +50,15 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('login', function(username, password) {
-		if (isValidUser(username, password)) {
-			onlineUsers.push(username);
-			io.emit('chat message', username + " has logged in.");
-			socket.emit('redirect', '/app');
-		} else {
-			socket.emit('invalid', null);
-		}
+		isValidUser(username, password, function(err, result) {
+			if (result) {
+				connectingUser.push(username);
+				io.emit('chat message', username + " has logged in.");
+				socket.emit('redirect', '/app');
+			} else {
+				socket.emit('invalid', null);
+			}
+		});
 	});
 
 	socket.on('register', function() {
@@ -53,12 +66,14 @@ io.on('connection', function(socket) {
 	});
 
 	socket.on('registration', function(username, password) {
-		if (isExistingUser(username)) {
-			socket.emit('exists', null);
-		} else {
-			addUser(username, password);
-			socket.emit("redirect", '/login');
-		}
+		isExistingUser(username, function(err, result) {
+			if (result) {
+				socket.emit('exists', null);
+			} else {
+				addUser(username, password);
+				socket.emit("redirect", '/login');
+			}
+		});
 	});
 });
 
@@ -66,51 +81,54 @@ http.listen(8080, function(){
 	console.log('listening on: 8080');
 });
 
-function User(name, password) {
-	this.name = name;
-	this.password = password;
-}
-
-var kerules = new User("Kerules", "123");
-var xiaoding = new User("Xiaoding", "1234");
-var luigi = new User("pi", "3.14");
-var users = [kerules, xiaoding, luigi];
-
-function isExistingUser(username) {
-	for (var i = 0; i < users.length; i++) {
-		if (users[i].name === username) {
-			return true;
-		}
-	}
-	return false;
-}
-
-function isValidUser(username, password) {
-	for (var i = 0; i < users.length; i++) {
-		if (username === users[i].name) {
-			return password === users[i].password;
-		}
-	}
-	return false;
-}
-
 function addUser(username, password) {
-	users.push(new User(username, password));
-}
-
-function getUserList() {
-	userList = "";
-	for (var i = 0; i < users.length; i++) {
-		userList += ', ' + users[i].name;
-	}
-	return userList.substring(2);
-}
-
-function removeUser(username) {
-	for (var i = 0; i < users.length; i++) {
-		if (users[i] == username) {
-			users.splice(i, 1);
-			break;
+	connection.query('INSERT INTO users(username, password) VALUES("'
+		+ username + '", "' + password +'")',
+		function(err) {
+			if (err) {
+				console.error("Error while performing user addition query.");
+			}
 		}
-	}
+	);
+}
+
+function isExistingUser(username, callback) {
+	connection.query("SELECT username FROM users WHERE username=\"" + username + "\"",
+		function(err, rows) {
+			if (!err) {
+				callback(null, rows.length > 0);
+			} else {
+				console.error('Error while performing user existential query.');
+			}
+		}
+	);
+}
+
+function isValidUser(username, password, callback) {
+	connection.query("SELECT username FROM users WHERE username=\"" + username
+		+ "\" AND password=\"" + password + "\"",
+		function(err, rows) {
+			if (!err) {
+				callback(null, rows.length > 0);
+			} else {
+				console.error('Error while performing user validation query.');
+			}
+		}
+	);
+}
+
+function retrieveUserList(callback) {
+	connection.query("SELECT username FROM users", function(err, rows) {
+		var list = 'Registered Users: ';
+		if (!err) {
+			var listBuilder = '';
+			for (var i = 0; i < rows.length; i++) {
+				listBuilder += ', ' + rows[i].username;
+			}
+			list += listBuilder.substring(2);
+			callback(null, list);
+		} else {
+			console.error('Error while performing user list query.');
+		}
+	});
 }
